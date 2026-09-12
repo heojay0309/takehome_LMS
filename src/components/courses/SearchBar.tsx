@@ -1,5 +1,6 @@
 "use client";
 
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 type SearchBarProps = {
@@ -9,12 +10,18 @@ type SearchBarProps = {
 
 export function SearchBar({ value, onChange }: SearchBarProps) {
   return (
-    <Input
-      type="search"
-      placeholder="Search courses, instructors..."
-      value={value}
-      onChange={(event) => onChange(event.target.value)}
-      aria-label="Search courses"
-    />
+    <label className="flex flex-col gap-1.5 text-sm font-medium">
+      Search courses
+      <span className="relative">
+        <Search className="pointer-events-none absolute top-3.5 left-4 size-4 text-muted-foreground" aria-hidden="true" />
+        <Input
+          type="search"
+          placeholder="What would you like to learn?"
+          className="pl-11"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      </span>
+    </label>
   );
 }

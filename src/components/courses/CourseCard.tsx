@@ -11,15 +11,15 @@ type CourseCardProps = {
 
 export function CourseCard({ course, progressPercent }: CourseCardProps) {
   return (
-    <Link href={`/courses/${course.id}`} className="group block h-full">
-      <Card className="h-full overflow-hidden transition-shadow group-hover:shadow-md">
-        <div className="relative aspect-video overflow-hidden bg-zinc-100 dark:bg-zinc-900">
+    <Link href={`/courses/${course.id}`} className="group block h-full rounded-xl">
+      <Card className="h-full overflow-hidden transition-[box-shadow,transform] duration-[220ms] group-hover:-translate-y-0.5 group-hover:shadow-card">
+        <div className="relative aspect-video overflow-hidden bg-muted">
           <Image
             src={course.thumbnail}
             alt={course.title}
             fill
-            className="object-cover transition-transform group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
           />
         </div>
         <CardHeader>
@@ -32,7 +32,7 @@ export function CourseCard({ course, progressPercent }: CourseCardProps) {
             {course.description}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
+        <CardContent className="space-y-2 text-sm text-muted-foreground">
           <p>
             {course.instructor} · {formatDuration(course.durationMinutes)} · ★{" "}
             {course.rating}
@@ -43,9 +43,9 @@ export function CourseCard({ course, progressPercent }: CourseCardProps) {
                 <span>Progress</span>
                 <span>{progressPercent}%</span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
+              <div className="h-2 overflow-hidden rounded-full bg-secondary">
                 <div
-                  className="h-full rounded-full bg-foreground transition-all"
+                  className="h-full rounded-full bg-progress transition-[width] duration-[380ms]"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>

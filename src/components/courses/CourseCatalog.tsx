@@ -48,7 +48,7 @@ export function CourseCatalog({ courses }: CourseCatalogProps) {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-4">
+      <div className="grid gap-4 rounded-xl border bg-card p-5 shadow-card xl:grid-cols-[1fr_1.4fr] xl:items-end">
         <SearchBar value={search} onChange={setSearch} />
         <Filters
           categories={getCategories()}
@@ -59,6 +59,9 @@ export function CourseCatalog({ courses }: CourseCatalogProps) {
           onDifficultyChange={setDifficulty}
         />
       </div>
+      <p role="status" className="text-sm text-muted-foreground">
+        {filteredCourses.length} {filteredCourses.length === 1 ? "course" : "courses"} to explore
+      </p>
       <CourseGrid
         courses={filteredCourses}
         progressByCourseId={progressByCourseId}

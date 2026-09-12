@@ -9,14 +9,14 @@ type CourseGridProps = {
 export function CourseGrid({ courses, progressByCourseId }: CourseGridProps) {
   if (courses.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-zinc-300 p-10 text-center text-zinc-600 dark:border-zinc-700 dark:text-zinc-400">
+      <div className="rounded-xl border border-dashed bg-card p-10 text-center text-muted-foreground">
         No courses match your filters.
       </div>
     );
   }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
       {courses.map((course) => (
         <CourseCard
           key={course.id}

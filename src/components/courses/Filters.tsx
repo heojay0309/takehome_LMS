@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import type { Difficulty } from "@/lib/courses";
 
 type FiltersProps = {
@@ -25,13 +24,11 @@ function SelectField({
 }) {
   return (
     <label className="flex flex-col gap-1.5 text-sm">
-      <span className="font-medium text-zinc-700 dark:text-zinc-300">{label}</span>
+      <span className="font-medium text-foreground">{label}</span>
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className={cn(
-          "h-10 rounded-md border border-zinc-200 bg-transparent px-3 text-sm dark:border-zinc-800",
-        )}
+        className="h-11 w-full min-w-0 rounded-md border border-input bg-card px-3 text-base"
       >
         {options.map((option) => (
           <option key={option.value || "all"} value={option.value}>
