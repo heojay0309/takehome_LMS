@@ -27,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${bodyFont.variable} ${headingFont.variable} h-full font-sans antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <ClerkProvider>{children}</ClerkProvider>
+        <ClerkProvider appearance={{ cssLayerName: "clerk" }}>{children}</ClerkProvider>
       </body>
     </html>
   );
