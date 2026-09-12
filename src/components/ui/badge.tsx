@@ -14,9 +14,9 @@ export function Badge({
     <span
       className={cn(
         "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
-        variant === "default" && "bg-foreground text-background",
+        variant === "default" && "bg-secondary text-secondary-foreground",
         variant === "secondary" &&
-          "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200",
+          "bg-muted text-muted-foreground",
         className,
       )}
       {...props}
