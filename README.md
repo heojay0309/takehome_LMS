@@ -1,10 +1,10 @@
 # BetterU LMS
 
-A frontend take-home built with Next.js 16 (App Router), React 19, strict TypeScript, Tailwind CSS 4, shadcn/ui (Base UI), and Clerk.
+A frontend take-home: authenticated users browse a course catalog, open modules, and track lesson progress in the browser.
 
-## Status
+**Stack:** Next.js 16 (App Router), React 19, strict TypeScript, Tailwind CSS 4, shadcn/ui (Base UI), Clerk.
 
-Day 1 setup: Clerk integration, route groups, shadcn configuration, and shared styling. Existing catalog, lesson, and progress scaffolding is preserved; this is **not yet a completed submission**. See [the assignment](./Take_Home.md) for the full requirements.
+Progress is client-side only (`localStorage` keyed by Clerk `userId`). There is no backend or database. Dark mode and goal-based learning tracks are extras, not required by the brief.
 
 ## Setup
 
@@ -31,90 +31,113 @@ Never commit real keys. `.env.local` and Clerk's local configuration are ignored
 pnpm dev
 ```
 
-Open http://localhost:3000. Dashboard requests require authentication; `/sign-in` and `/sign-up` are public.
+Open [http://localhost:3000](http://localhost:3000). Dashboard routes require authentication; `/sign-in` and `/sign-up` are public.
 
 ## Architecture
 
 ```text
-data/courses.json              Provided catalog; original schema preserved
+data/courses.json                 Provided 12-course catalog; original schema preserved
 src/
   app/
-    (auth)/                    Clerk sign-in and sign-up catch-all routes
+    (auth)/                       Clerk sign-in and sign-up catch-all routes
     (dashboard)/
-      page.tsx                 Catalog
+      page.tsx                    Catalog, continue-learning, optional track
       courses/[courseId]/
-        page.tsx               Course detail and modules
+        page.tsx                  Course detail, modules, checklist
         lessons/[lessonId]/
-          page.tsx             Lesson and mock player
-    layout.tsx                 ClerkProvider, metadata, and Geist fonts
-    globals.css                Tailwind and shadcn theme tokens
+          page.tsx                Lesson view and mock player
+      loading.tsx                 Route-level skeletons
+    layout.tsx                    ClerkProvider, theme bootstrap, fonts
+    globals.css                   Better U tokens, Tailwind, Clerk layer
   components/
-    courses/                   Catalog, cards, search, and filters
-    lessons/                   Checklist and mock player
-    layout/                    Header and Clerk user controls
-    ui/                        Shared UI primitives
-  hooks/                       useDebouncedValue and useCourseProgress
-  lib/                         Typed catalog and localStorage helpers
-  proxy.ts                     Clerk request protection (Next.js 16 convention)
-components.json                shadcn preset, aliases, and CSS configuration
+    courses/                      Catalog, cards, filters, search, progress UI
+    lessons/                      Checklist, mock player, next-lesson controls
+    layout/                       Header, sidebar, UserButton, theme toggle
+    onboarding/                   Optional track quiz and roadmap (extra)
+    ui/                           shadcn / Base UI primitives
+  hooks/
+    useDebouncedValue.ts          ≥300ms catalog search
+    useCourseProgress.ts          Shared progress snapshot for the signed-in user
+    useOnboardingPreference.ts    Optional saved tracks (extra)
+  lib/
+    courses.ts                    Typed catalog load/filter helpers
+    catalog-state.ts              URL-owned search and filter params
+    progress.ts / progress-store.ts
+                                  Parse, persist, and broadcast lesson completion
+    clerk-appearance.ts           Clerk color tokens and UserButton slots
+    theme.ts                      Light/dark preference (extra)
+    onboarding.ts / track-*.ts    Optional learning tracks (extra)
+  proxy.ts                        Clerk route protection (Next.js 16)
+tests/                            Node test runner + TypeScript (no extra deps)
 ```
 
-Routes and layouts use Server Components by default. Interactive controls and hooks use Client Components. Lesson completion stays in browser `localStorage`, keyed by Clerk user ID and course ID; there is no backend or database.
+Routes and layouts are Server Components by default. Interactive controls and hooks are Client Components.
 
-shadcn/ui is initialized with the `base-vega` preset and neutral theme. Add primitives as needed rather than installing the entire component library:
+`src/proxy.ts` protects everything except `/sign-in` and `/sign-up`. The dashboard layout wraps the tree in `CourseProgressProvider` so catalog cards, the sidebar, and lesson checkboxes share one user-scoped store. Completing a lesson updates the percentage immediately and writes `betteru-progress:{userId}:{courseId}`. Search and filters live in the URL (`q`, `category`, `difficulty`, `status`); typing still debounces 300ms before results change.
+
+shadcn/ui uses the `base-vega` preset. Add primitives as needed rather than installing the whole library:
 
 ```bash
 pnpm dlx shadcn@latest add <component>
 ```
 
-Review generated changes before replacing existing primitives or their call sites.
-
 ## Validation
 
 ```bash
+pnpm test
 pnpm lint
 pnpm exec next typegen
 pnpm exec tsc --noEmit
 pnpm build
 ```
 
-Setup verification in the agent environment:
-
-- Route generation and TypeScript checks pass.
-- Lint reports two pre-existing issues: synchronous effect-driven state in `useCourseProgress.ts`, and a variable named `module` in `lib/courses.ts`. These remain follow-up work, not suppressed rules.
-- Production build is blocked by the sandbox denying Turbopack's local process/port operation. Run `pnpm build` outside that restriction before deployment.
-- Browser sign-in/sign-out and protected-route redirects have not been verified end to end.
+`pnpm test` compiles `tests/` with TypeScript and runs Node's built-in test runner. Output goes to ignored `.test-build/`.
 
 ## Deployment
 
-Deployment is deferred until the core flows and checks are complete.
-
 1. Import the repository into Vercel as a Next.js project.
-2. Configure the Clerk environment variables above for the intended deployment environment. Use production keys for production and keep `CLERK_SECRET_KEY` server-only.
-3. Configure the production domain in Clerk and complete its production setup. Configure preview environments separately; do not broadly allow arbitrary preview origins.
-4. Deploy and verify signed-out redirects, sign-in, user controls/sign-out, and direct navigation to course and lesson routes.
+2. Set the same Clerk variables as local setup. Use production keys for production and keep `CLERK_SECRET_KEY` server-only.
+3. In Clerk Dashboard → **Domains**, add the production URL (for example `https://your-app.vercel.app`). Configure preview origins separately; do not allow arbitrary preview hosts.
+4. Deploy and verify: signed-out users redirect to sign-in, avatar and sign-out work, catalog filters/search work, lesson toggles persist after refresh, and course/lesson URLs load directly.
 
-## Trade-offs and remaining work
+After the first production deploy, replace this section with the live URL.
 
-- This pass stops at setup and documentation; existing feature scaffolding was retained rather than rewritten.
-- Static course data and per-browser progress follow the brief. Cross-device sync, backend services, real streaming, and admin features are deliberately out of scope.
-- Remaining work includes the lint issues, completion filters/badges, consistent 0% progress, loading states, persistence validation, and responsive/accessibility testing.
-- Dark-theme tokens exist, but a theme switcher is not part of this setup.
+## Trade-offs
+
+- Progress is `localStorage` keyed by Clerk `userId`, as specified. If storage is blocked, the UI keeps working in memory and shows a warning; that session cannot survive a refresh.
+- The mock player marks a lesson complete on the video `ended` event. That is a demo affordance, not verified watch time. The checklist can still undo completion.
+- Advertised course duration in the dataset does not equal the sum of lesson durations. Remaining-time copy is labeled as an estimate; `data/courses.json` is not rewritten to make the numbers match.
+- Dark mode and learning tracks are extras built after the required catalog, checklist, and persistence. If they add noise, ignore the classroom quiz and judge the catalog.
+- No Playwright/Cypress. Unit tests cover progress, filters, and stores; sign-in and layout still need a real browser pass.
 
 ## AI Usage
 
-The previous project notes record Cursor assistance for Clerk integration and initial scaffolding. This setup pass used an AI coding assistant in Pi/Paseo for repository inspection, cleanup, and documentation; shadcn initialization was run manually in the developer's terminal after agent-side package-manager failures.
+### Tools
 
-Useful prompts/workflows:
+- **Claude Design** — pulled Better U color tokens from [betterucare.com](https://www.betterucare.com/) so the dashboard matched an existing brand instead of a generic shadcn theme.
+- **Browser devtools** — captured the Better U logo and landing-page video for the signed-out shell.
+- **Cursor** — Clerk + Next.js App Router bootstrap after the Create Next App boilerplate (protected routes, sign-in/sign-up, `UserButton`).
+- **GPT-6** (including a higher-limit Astra session) — larger UI/UX passes: layout, catalog, lesson player, accessibility.
+- **Grok 4.5 / 4.6** — smaller and medium follow-ups after hitting GPT-6 rate limits, so I did not burn the stronger model on one-file fixes.
 
-1. “Bootstrap the LMS dashboard's foundation and authentication; stop after setup and README.” This kept the pass bounded rather than adding more features.
-2. Compare the installed Next.js documentation with the existing structure, then validate with lint, route generation, and TypeScript.
-3. Review the generated shadcn theme against the root layout and preserve existing course work during cleanup.
+I treated the models as drafters. I kept the assignment open while reviewing diffs, and I did not accept a change I could not explain.
 
-**Correction:** The earlier AI-assisted README justified keeping deprecated `middleware.ts` merely to match the assignment's suggested tree. This pass renamed it to `proxy.ts`, following the installed Next.js 16 documentation while preserving Clerk protection logic. It also removed an unused Inter font and fixed a self-referencing font token introduced during initialization.
+### Workflows that helped most
+
+1. **Audit the brief against the repo before adding features.** I asked the agent to map the current tree to the Definition of Done (auth, catalog filters, debounce, progress, skeletons, empty states) and list only what was still missing. That stopped me from building extras first.
+
+2. **Research, then write a spec, then implement.** I used LMS reference material (including Blackboard’s strengths around paths and assessment) to decide whether a light onboarding track was worth it. The useful prompt was not “build onboarding.” It was: _propose a goal-based track that stays inside the provided 12-course catalog, with an experience gate, and do not invent new courses._ I wrote that as a short brief in a separate Claude chat, then implemented against the brief.
+
+3. **Name the actual component, don’t say “think harder.”** When hover styling failed on the account control, retrying the same prompt wasted time. Opening `UserNav` showed the UI was Clerk’s `UserButton`, not a local profile card. The next prompt targeted `appearance.elements` (`userButtonTrigger`, `avatarBox`, `userButtonOuterIdentifier`) so the hit area and hover state covered avatar + name together.
+
+### What the AI got wrong
+
+Hover states. The model kept styling inner fragments of the profile control, so hover never covered the whole row (avatar and name). Telling it to try again did not help, because it was still guessing at DOM I had not shown it. I read the Clerk `UserButton` appearance API, pointed the model at those slots, and the fix landed in one pass.
+
+A second miss: onboarding. Asked for suggested courses, the model built a surface-level quiz (“interested in web development?” / “what’s your familiarity?”) that returned a single lesson. I stopped letting it invent product behavior, wrote track guidelines (goal, experience, cross-category sequence, one saved track per goal, no extra catalog data), and only then had it implement. The extra is optional; the required catalog still uses the provided schema.
 
 ## If I had more time
 
-- Test per-user progress, hydration, malformed storage, and account switching.
-- Add authentication smoke tests and keyboard/mobile accessibility checks.
-- Polish loading, empty, and completion states within the assignment scope.
+1. Sign into the real Better U product with a test account and see how learners actually move through it. I would rather steal one or two patterns that already work than keep guessing from the marketing site.
+2. I already added goal-based tracks after looking at how other LMS platforms handle personalization. Next I would show people where they stand against that goal — not just per-course checkboxes — and call out a few achievements when they hit milestones.
+3. Add a short Playwright run that signs in, searches and filters the catalog, toggles a lesson, refreshes, and checks that the progress is still there.
