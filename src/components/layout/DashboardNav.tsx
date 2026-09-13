@@ -1,20 +1,26 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { BookOpen } from "lucide-react";
+import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { BookOpen } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export function DashboardNav() {
   const pathname = usePathname();
+  const params = useSearchParams();
+  const active = pathname === '/' && !params.get('track');
 
   return (
     <nav aria-label="Learning navigation">
       <Link
         href="/"
-        aria-current={pathname === "/" ? "page" : undefined}
-        className="flex min-h-11 items-center gap-3 rounded-full bg-secondary px-5 py-3 text-sm font-semibold text-secondary-foreground transition-colors duration-150 hover:bg-primary hover:text-primary-foreground"
+        aria-current={active ? 'page' : undefined}
+        className={cn(
+          'flex min-h-12 items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors hover:bg-secondary',
+          active && 'bg-secondary text-secondary-foreground',
+        )}
       >
-        <BookOpen className="size-5" strokeWidth={1.75} aria-hidden="true" />
+        <BookOpen className="size-4 shrink-0" aria-hidden="true" />
         Course catalog
       </Link>
     </nav>

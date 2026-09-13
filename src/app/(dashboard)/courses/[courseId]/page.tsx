@@ -1,100 +1,81 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import { CourseStartLink } from "@/components/courses/CourseStartLink";
+import { LessonChecklist } from "@/components/lessons/LessonChecklist";
 import { Badge } from "@/components/ui/badge";
+import { getCatalogReturnHref, normalizeCatalogQuery } from "@/lib/catalog-state";
+import { buttonVariants } from "@/components/ui/button";
 import {
   formatDuration,
-  getAllLessons,
   getCourseById,
 } from "@/lib/courses";
 
 type CourseDetailPageProps = PageProps<"/courses/[courseId]">;
 
-export default async function CourseDetailPage({ params }: CourseDetailPageProps) {
+export default async function CourseDetailPage({ params, searchParams }: CourseDetailPageProps) {
   const { courseId } = await params;
+  const catalogQuery = normalizeCatalogQuery((await searchParams).catalog);
   const course = getCourseById(courseId);
 
   if (!course) {
     notFound();
   }
 
-  const firstLesson = getAllLessons(course)[0];
-
   return (
     <div className="space-y-8">
-      <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
-        <div className="relative aspect-video overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-900">
+      <Link
+        href={getCatalogReturnHref(catalogQuery)}
+        className={buttonVariants({ variant: "ghost", className: "-ml-2" })}
+      >
+        <ArrowLeft className="size-5" strokeWidth={1.75} aria-hidden="true" /> Back to catalog
+      </Link>
+      <div className="grid items-start gap-8 xl:grid-cols-[1.2fr_1fr]">
+        <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted">
           <Image
             src={course.thumbnail}
-            alt={course.title}
+            alt=""
             fill
             className="object-cover"
             priority
-            sizes="(max-width: 1024px) 100vw, 60vw"
+            sizes="(max-width: 1023px) 100vw, (max-width: 1279px) 75vw, 50vw"
           />
         </div>
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
           <div className="flex flex-wrap gap-2">
             <Badge variant="secondary">{course.category}</Badge>
             <Badge>{course.difficulty}</Badge>
           </div>
-          <h1 className="text-3xl font-semibold tracking-tight">{course.title}</h1>
-          <p className="text-zinc-600 dark:text-zinc-400">{course.description}</p>
+          <h1 className="text-2xl sm:text-3xl">{course.title}</h1>
+          <p className="text-muted-foreground">{course.description}</p>
           <dl className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <dt className="text-zinc-500">Instructor</dt>
+              <dt className="text-muted-foreground">Instructor</dt>
               <dd className="font-medium">{course.instructor}</dd>
             </div>
             <div>
-              <dt className="text-zinc-500">Duration</dt>
+              <dt className="text-muted-foreground">Duration</dt>
               <dd className="font-medium">{formatDuration(course.durationMinutes)}</dd>
             </div>
             <div>
-              <dt className="text-zinc-500">Rating</dt>
-              <dd className="font-medium">★ {course.rating}</dd>
+              <dt className="text-muted-foreground">Rating</dt>
+              <dd className="font-medium">{course.rating > 0 ? `★ ${course.rating}` : "Not yet rated"}</dd>
             </div>
             <div>
-              <dt className="text-zinc-500">Enrolled</dt>
+              <dt className="text-muted-foreground">Enrolled</dt>
               <dd className="font-medium">
                 {course.enrolledCount.toLocaleString()} learners
               </dd>
             </div>
           </dl>
-          {firstLesson && (
-            <Link
-              href={`/courses/${course.id}/lessons/${firstLesson.id}`}
-              className="inline-flex h-10 items-center justify-center rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background transition-colors hover:bg-foreground/90"
-            >
-              Start course
-            </Link>
-          )}
+          <CourseStartLink course={course} catalogQuery={catalogQuery} />
         </div>
       </div>
 
       <section className="space-y-4">
         <h2 className="text-xl font-semibold">Modules</h2>
-        <div className="space-y-4">
-          {course.modules.map((module) => (
-            <div
-              key={module.id}
-              className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950"
-            >
-              <h3 className="font-medium">{module.title}</h3>
-              <ul className="mt-3 space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
-                {module.lessons.map((lesson) => (
-                  <li key={lesson.id}>
-                    <Link
-                      href={`/courses/${course.id}/lessons/${lesson.id}`}
-                      className="hover:text-foreground hover:underline"
-                    >
-                      {lesson.title} · {lesson.durationMinutes} min
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+        <LessonChecklist course={course} catalogQuery={catalogQuery} />
       </section>
     </div>
   );

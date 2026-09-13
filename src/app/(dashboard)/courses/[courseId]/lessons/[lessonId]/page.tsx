@@ -1,51 +1,71 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { LessonChecklist } from "@/components/lessons/LessonChecklist";
-import { MockVideoPlayer } from "@/components/lessons/MockVideoPlayer";
-import { getLessonById } from "@/lib/courses";
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { LessonNavigation } from '@/components/lessons/LessonNavigation';
+import { LessonChecklist } from '@/components/lessons/LessonChecklist';
+import { LessonVideoPlayer } from '@/components/lessons/LessonVideoPlayer';
+import { getLessonById } from '@/lib/courses';
+import { normalizeCatalogQuery, withCatalogContext } from '@/lib/catalog-state';
 
-type LessonPageProps = PageProps<"/courses/[courseId]/lessons/[lessonId]">;
+type LessonPageProps = PageProps<'/courses/[courseId]/lessons/[lessonId]'>;
 
-export default async function LessonPage({ params }: LessonPageProps) {
+export default async function LessonPage({ params, searchParams }: LessonPageProps) {
   const { courseId, lessonId } = await params;
+  const catalogQuery = normalizeCatalogQuery((await searchParams).catalog);
   const result = getLessonById(courseId, lessonId);
 
   if (!result) {
     notFound();
   }
 
-  const { course, module, lesson } = result;
+  const { course, module: courseModule, lesson } = result;
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="space-y-1">
-          <p className="text-sm text-zinc-500">
-            <Link href={`/courses/${course.id}`} className="hover:underline">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="min-w-0 space-y-2">
+          <p className="text-sm text-muted-foreground">
+            <Link href={withCatalogContext(`/courses/${course.id}`, catalogQuery)} className="hover:underline">
               {course.title}
-            </Link>{" "}
-            / {module.title}
+            </Link>{' '}
+            / {courseModule.title}
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight">{lesson.title}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {lesson.title}
+          </h1>
         </div>
         <Link
-          href={`/courses/${course.id}`}
-          className="inline-flex h-10 items-center justify-center rounded-md border border-zinc-200 bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-zinc-100 dark:border-zinc-800 dark:hover:bg-zinc-900"
+          href={withCatalogContext(`/courses/${course.id}`, catalogQuery)}
+          className={buttonVariants({ variant: 'outline' })}
         >
-          Back to course
+          <ArrowLeft className="size-4" aria-hidden="true" /> Back to course
         </Link>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
-        <MockVideoPlayer
-          title={lesson.title}
-          durationMinutes={lesson.durationMinutes}
+      <div className="space-y-4">
+        <LessonVideoPlayer
+          course={course}
+          lesson={lesson}
+          moduleTitle={courseModule.title}
+          catalogQuery={catalogQuery}
         />
-        <aside className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
-          <h2 className="mb-4 text-lg font-semibold">Course content</h2>
-          <LessonChecklist course={course} activeLessonId={lesson.id} />
-        </aside>
+        <p className="text-xs text-muted-foreground">Sample footage for player demonstration; not the lesson recording. Finishing the preview marks this lesson complete. You can also change completion using the checklist.</p>
+        <LessonNavigation course={course} lessonId={lesson.id} catalogQuery={catalogQuery} />
       </div>
+
+      <details className="group/outline panel-padding rounded-xl border bg-card">
+        <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 rounded-md focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+          <span>
+            <span className="block text-lg font-semibold">Course content</span>
+            <span className="text-sm text-muted-foreground">Browse all modules and lessons</span>
+          </span>
+          <ChevronDown className="size-5 shrink-0 transition-transform group-open/outline:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
+        </summary>
+        <div className="mt-8">
+          <LessonChecklist course={course} activeLessonId={lesson.id} catalogQuery={catalogQuery} />
+        </div>
+      </details>
     </div>
   );
 }

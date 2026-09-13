@@ -1,8 +1,8 @@
 @layer theme, base, clerk, components, utilities;
 
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -16,7 +16,7 @@
   --color-popover: var(--card);
   --color-popover-foreground: var(--foreground);
   --color-primary: var(--primary);
-  --color-primary-foreground: #ffffff;
+  --color-primary-foreground: var(--primary-foreground);
   --color-primary-hover: var(--primary-hover);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--primary-hover);
@@ -24,16 +24,16 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--secondary);
   --color-accent-foreground: var(--primary-hover);
-  --color-destructive: #bd443c;
+  --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--primary);
-  --color-progress: #5fa69f;
-  --color-encouragement: #e9a17c;
-  --color-sidebar: #ffffff;
+  --color-progress: var(--progress);
+  --color-encouragement: var(--encouragement);
+  --color-sidebar: var(--card);
   --color-sidebar-foreground: var(--foreground);
   --color-sidebar-primary: var(--primary);
-  --color-sidebar-primary-foreground: #ffffff;
+  --color-sidebar-primary-foreground: var(--primary-foreground);
   --color-sidebar-accent: var(--secondary);
   --color-sidebar-accent-foreground: var(--primary-hover);
   --color-sidebar-border: var(--border);
@@ -45,7 +45,7 @@
   --radius-2xl: 2rem;
   --radius-3xl: 2.5rem;
   --radius-4xl: 3rem;
-  --shadow-card: 0 6px 24px -12px rgb(36 33 72 / 18%);
+  --shadow-card: var(--elevation-card);
 }
 
 :root {
@@ -54,13 +54,39 @@
   --foreground: #231f20;
   --card: #ffffff;
   --primary: #6d6cb8;
+  --primary-foreground: #ffffff;
   --primary-hover: #49458a;
   --secondary: #eceaf7;
   --muted: #f6f5fb;
   --muted-foreground: #625d6c;
   --border: #e6e3eb;
   --input: #aaa5b5;
+  --scroll-bar: #6d6cb8e5;
+  --destructive: #bd443c;
+  --progress: #5fa69f;
+  --encouragement: #e9a17c;
+  --elevation-card: 0 6px 24px -12px rgb(36 33 72 / 18%);
   --radius: 1.5rem;
+}
+
+:root.dark {
+  color-scheme: dark;
+  --background: #17151f;
+  --foreground: #f2eff7;
+  --card: #211e2c;
+  --primary: #a49ce8;
+  --primary-foreground: #1b172c;
+  --primary-hover: #c3bcff;
+  --secondary: #343047;
+  --muted: #292535;
+  --muted-foreground: #b9b2c8;
+  --border: #423c50;
+  --input: #797086;
+  --scroll-bar: #a49ce8e5;
+  --destructive: #ff9b92;
+  --progress: #80c8bf;
+  --encouragement: #f0b38e;
+  --elevation-card: 0 6px 24px -12px rgb(0 0 0 / 55%);
 }
 
 @layer base {
@@ -70,8 +96,11 @@
   body {
     @apply bg-background font-sans text-base text-foreground;
     line-height: 1.6;
+    overflow-wrap: anywhere;
   }
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     @apply font-heading font-semibold tracking-[-0.03em];
   }
   :focus-visible {
@@ -84,8 +113,112 @@
   }
 }
 
+@supports selector(::-webkit-scrollbar) {
+  .sidebar-scrollbar {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+}
+
+/* Native, content-sized thumbs; scoped to sidebar lists, not the page. */
+@layer components {
+  /* 8px rhythm: 8 / 16 / 24 / 32 / 48 / 64. Share geometry with loading UI. */
+  .page-gutters {
+    @apply px-4 sm:px-8;
+  }
+
+  .panel-padding {
+    @apply p-4 sm:p-8;
+  }
+
+  .catalog-surface {
+    container: catalog / inline-size;
+  }
+
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    @apply gap-4 sm:gap-8;
+  }
+
+  .catalog-toolbar {
+    @apply grid min-w-0 gap-4 rounded-xl border bg-card p-4 shadow-card sm:p-6;
+  }
+
+  .catalog-filters {
+    @apply grid min-w-0 gap-4;
+  }
+
+  @container catalog (min-width: 40rem) {
+    .catalog-filters {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @container catalog (min-width: 64rem) {
+    .catalog-toolbar {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      align-items: end;
+    }
+  }
+
+  .lesson-player-frame {
+    @apply aspect-video min-h-64 w-full sm:min-h-80;
+  }
+
+  .sidebar-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .sidebar-scrollbar[data-scrolling='true'] {
+    scrollbar-color: var(--scroll-bar) transparent;
+  }
+
+  /* Older WebKit browsers without the standard scrollbar properties. */
+  .sidebar-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 999px;
+  }
+
+  .sidebar-scrollbar[data-scrolling='true']::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-bar);
+  }
+
+  @media (forced-colors: active) {
+    .sidebar-scrollbar,
+    .sidebar-scrollbar[data-scrolling='true'] {
+      scrollbar-width: auto;
+      scrollbar-color: auto;
+    }
+
+    .sidebar-scrollbar::-webkit-scrollbar-thumb,
+    .sidebar-scrollbar[data-scrolling='true']::-webkit-scrollbar-thumb {
+      background-color: ButtonText;
+    }
+
+    .sidebar-scrollbar::-webkit-scrollbar-track {
+      background-color: Canvas;
+    }
+  }
+}
+
 @utility violet-veil {
-  background: radial-gradient(ellipse at 15% 10%, #49458a 0%, #242148 48%, #17152d 100%);
+  background: radial-gradient(
+    ellipse at 15% 10%,
+    #49458a 0%,
+    #242148 48%,
+    #17152d 100%
+  );
 }
 
 /* Portrait layouts prioritize account access, not a stacked marketing hero. */
@@ -113,12 +246,20 @@
   }
 
   .auth-form-area {
-    padding: clamp(2rem, 5vw, 5rem);
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 80rem) and (orientation: landscape) {
+  .auth-form-area {
+    padding: 4rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 1ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;

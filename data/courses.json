@@ -15,26 +15,58 @@
         "id": "mod-react-intro",
         "title": "Getting Started with React",
         "lessons": [
-          { "id": "lesson-what-is-react", "title": "What Is React?", "durationMinutes": 12 },
-          { "id": "lesson-dev-environment", "title": "Setting Up Your Dev Environment", "durationMinutes": 18 },
-          { "id": "lesson-first-component", "title": "Your First Component", "durationMinutes": 22 }
+          {
+            "id": "lesson-what-is-react",
+            "title": "What Is React?",
+            "durationMinutes": 12
+          },
+          {
+            "id": "lesson-dev-environment",
+            "title": "Setting Up Your Dev Environment",
+            "durationMinutes": 18
+          },
+          {
+            "id": "lesson-first-component",
+            "title": "Your First Component",
+            "durationMinutes": 22
+          }
         ]
       },
       {
         "id": "mod-react-state",
         "title": "State and Events",
         "lessons": [
-          { "id": "lesson-usestate", "title": "Managing State with useState", "durationMinutes": 25 },
-          { "id": "lesson-event-handling", "title": "Handling User Events", "durationMinutes": 20 },
-          { "id": "lesson-controlled-inputs", "title": "Controlled Inputs", "durationMinutes": 24 }
+          {
+            "id": "lesson-usestate",
+            "title": "Managing State with useState",
+            "durationMinutes": 25
+          },
+          {
+            "id": "lesson-event-handling",
+            "title": "Handling User Events",
+            "durationMinutes": 20
+          },
+          {
+            "id": "lesson-controlled-inputs",
+            "title": "Controlled Inputs",
+            "durationMinutes": 24
+          }
         ]
       },
       {
         "id": "mod-react-effects",
         "title": "Side Effects and Data Fetching",
         "lessons": [
-          { "id": "lesson-useeffect", "title": "Introduction to useEffect", "durationMinutes": 28 },
-          { "id": "lesson-fetching-data", "title": "Fetching Data in Components", "durationMinutes": 30 }
+          {
+            "id": "lesson-useeffect",
+            "title": "Introduction to useEffect",
+            "durationMinutes": 28
+          },
+          {
+            "id": "lesson-fetching-data",
+            "title": "Fetching Data in Components",
+            "durationMinutes": 30
+          }
         ]
       }
     ]
@@ -55,18 +87,42 @@
         "id": "mod-next-routing",
         "title": "Routing and Layouts",
         "lessons": [
-          { "id": "lesson-app-router-basics", "title": "App Router Basics", "durationMinutes": 20 },
-          { "id": "lesson-nested-layouts", "title": "Nested Layouts", "durationMinutes": 26 },
-          { "id": "lesson-dynamic-routes", "title": "Dynamic Routes", "durationMinutes": 24 }
+          {
+            "id": "lesson-app-router-basics",
+            "title": "App Router Basics",
+            "durationMinutes": 20
+          },
+          {
+            "id": "lesson-nested-layouts",
+            "title": "Nested Layouts",
+            "durationMinutes": 26
+          },
+          {
+            "id": "lesson-dynamic-routes",
+            "title": "Dynamic Routes",
+            "durationMinutes": 24
+          }
         ]
       },
       {
         "id": "mod-next-data",
         "title": "Data Patterns",
         "lessons": [
-          { "id": "lesson-server-components", "title": "Server vs Client Components", "durationMinutes": 32 },
-          { "id": "lesson-route-handlers", "title": "Route Handlers", "durationMinutes": 28 },
-          { "id": "lesson-caching", "title": "Caching Strategies", "durationMinutes": 30 }
+          {
+            "id": "lesson-server-components",
+            "title": "Server vs Client Components",
+            "durationMinutes": 32
+          },
+          {
+            "id": "lesson-route-handlers",
+            "title": "Route Handlers",
+            "durationMinutes": 28
+          },
+          {
+            "id": "lesson-caching",
+            "title": "Caching Strategies",
+            "durationMinutes": 30
+          }
         ]
       }
     ]
@@ -87,18 +143,42 @@
         "id": "mod-ts-basics",
         "title": "Core TypeScript",
         "lessons": [
-          { "id": "lesson-basic-types", "title": "Basic Types and Inference", "durationMinutes": 18 },
-          { "id": "lesson-interfaces", "title": "Interfaces and Type Aliases", "durationMinutes": 22 },
-          { "id": "lesson-unions", "title": "Unions and Discriminated Unions", "durationMinutes": 26 }
+          {
+            "id": "lesson-basic-types",
+            "title": "Basic Types and Inference",
+            "durationMinutes": 18
+          },
+          {
+            "id": "lesson-interfaces",
+            "title": "Interfaces and Type Aliases",
+            "durationMinutes": 22
+          },
+          {
+            "id": "lesson-unions",
+            "title": "Unions and Discriminated Unions",
+            "durationMinutes": 26
+          }
         ]
       },
       {
         "id": "mod-ts-react",
         "title": "TypeScript with React",
         "lessons": [
-          { "id": "lesson-typing-props", "title": "Typing Component Props", "durationMinutes": 24 },
-          { "id": "lesson-typing-hooks", "title": "Typing Hooks and Context", "durationMinutes": 28 },
-          { "id": "lesson-generics", "title": "Generics in UI Components", "durationMinutes": 30 }
+          {
+            "id": "lesson-typing-props",
+            "title": "Typing Component Props",
+            "durationMinutes": 24
+          },
+          {
+            "id": "lesson-typing-hooks",
+            "title": "Typing Hooks and Context",
+            "durationMinutes": 28
+          },
+          {
+            "id": "lesson-generics",
+            "title": "Generics in UI Components",
+            "durationMinutes": 30
+          }
         ]
       }
     ]
@@ -119,18 +199,42 @@
         "id": "mod-design-tokens",
         "title": "Foundations",
         "lessons": [
-          { "id": "lesson-design-tokens", "title": "Design Tokens and Theming", "durationMinutes": 20 },
-          { "id": "lesson-typography", "title": "Typography Scale", "durationMinutes": 18 },
-          { "id": "lesson-color-system", "title": "Color Systems", "durationMinutes": 22 }
+          {
+            "id": "lesson-design-tokens",
+            "title": "Design Tokens and Theming",
+            "durationMinutes": 20
+          },
+          {
+            "id": "lesson-typography",
+            "title": "Typography Scale",
+            "durationMinutes": 18
+          },
+          {
+            "id": "lesson-color-system",
+            "title": "Color Systems",
+            "durationMinutes": 22
+          }
         ]
       },
       {
         "id": "mod-design-components",
         "title": "Component Patterns",
         "lessons": [
-          { "id": "lesson-primitives", "title": "Primitive Components", "durationMinutes": 25 },
-          { "id": "lesson-composition", "title": "Composition Patterns", "durationMinutes": 27 },
-          { "id": "lesson-accessibility", "title": "Accessible Component APIs", "durationMinutes": 30 }
+          {
+            "id": "lesson-primitives",
+            "title": "Primitive Components",
+            "durationMinutes": 25
+          },
+          {
+            "id": "lesson-composition",
+            "title": "Composition Patterns",
+            "durationMinutes": 27
+          },
+          {
+            "id": "lesson-accessibility",
+            "title": "Accessible Component APIs",
+            "durationMinutes": 30
+          }
         ]
       }
     ]
@@ -151,17 +255,37 @@
         "id": "mod-python-pandas",
         "title": "Working with DataFrames",
         "lessons": [
-          { "id": "lesson-pandas-intro", "title": "Introduction to pandas", "durationMinutes": 22 },
-          { "id": "lesson-filtering", "title": "Filtering and Sorting", "durationMinutes": 24 },
-          { "id": "lesson-groupby", "title": "Group By Aggregations", "durationMinutes": 28 }
+          {
+            "id": "lesson-pandas-intro",
+            "title": "Introduction to pandas",
+            "durationMinutes": 22
+          },
+          {
+            "id": "lesson-filtering",
+            "title": "Filtering and Sorting",
+            "durationMinutes": 24
+          },
+          {
+            "id": "lesson-groupby",
+            "title": "Group By Aggregations",
+            "durationMinutes": 28
+          }
         ]
       },
       {
         "id": "mod-python-viz",
         "title": "Visualization",
         "lessons": [
-          { "id": "lesson-matplotlib", "title": "Charts with matplotlib", "durationMinutes": 26 },
-          { "id": "lesson-storytelling", "title": "Data Storytelling Basics", "durationMinutes": 20 }
+          {
+            "id": "lesson-matplotlib",
+            "title": "Charts with matplotlib",
+            "durationMinutes": 26
+          },
+          {
+            "id": "lesson-storytelling",
+            "title": "Data Storytelling Basics",
+            "durationMinutes": 20
+          }
         ]
       }
     ]
@@ -182,18 +306,42 @@
         "id": "mod-ml-basics",
         "title": "Core Concepts",
         "lessons": [
-          { "id": "lesson-ml-overview", "title": "What Is Machine Learning?", "durationMinutes": 16 },
-          { "id": "lesson-train-test", "title": "Train/Test Splits", "durationMinutes": 24 },
-          { "id": "lesson-bias-variance", "title": "Bias-Variance Tradeoff", "durationMinutes": 30 }
+          {
+            "id": "lesson-ml-overview",
+            "title": "What Is Machine Learning?",
+            "durationMinutes": 16
+          },
+          {
+            "id": "lesson-train-test",
+            "title": "Train/Test Splits",
+            "durationMinutes": 24
+          },
+          {
+            "id": "lesson-bias-variance",
+            "title": "Bias-Variance Tradeoff",
+            "durationMinutes": 30
+          }
         ]
       },
       {
         "id": "mod-ml-models",
         "title": "Model Families",
         "lessons": [
-          { "id": "lesson-linear-regression", "title": "Linear Regression", "durationMinutes": 32 },
-          { "id": "lesson-classification", "title": "Classification Models", "durationMinutes": 34 },
-          { "id": "lesson-evaluation", "title": "Evaluation Metrics", "durationMinutes": 28 }
+          {
+            "id": "lesson-linear-regression",
+            "title": "Linear Regression",
+            "durationMinutes": 32
+          },
+          {
+            "id": "lesson-classification",
+            "title": "Classification Models",
+            "durationMinutes": 34
+          },
+          {
+            "id": "lesson-evaluation",
+            "title": "Evaluation Metrics",
+            "durationMinutes": 28
+          }
         ]
       }
     ]
@@ -214,17 +362,37 @@
         "id": "mod-pm-discovery",
         "title": "Discovery",
         "lessons": [
-          { "id": "lesson-customer-interviews", "title": "Customer Interviews", "durationMinutes": 18 },
-          { "id": "lesson-problem-framing", "title": "Problem Framing", "durationMinutes": 20 },
-          { "id": "lesson-opportunity-sizing", "title": "Opportunity Sizing", "durationMinutes": 22 }
+          {
+            "id": "lesson-customer-interviews",
+            "title": "Customer Interviews",
+            "durationMinutes": 18
+          },
+          {
+            "id": "lesson-problem-framing",
+            "title": "Problem Framing",
+            "durationMinutes": 20
+          },
+          {
+            "id": "lesson-opportunity-sizing",
+            "title": "Opportunity Sizing",
+            "durationMinutes": 22
+          }
         ]
       },
       {
         "id": "mod-pm-delivery",
         "title": "Delivery",
         "lessons": [
-          { "id": "lesson-writing-prds", "title": "Writing PRDs", "durationMinutes": 24 },
-          { "id": "lesson-prioritization", "title": "Prioritization Frameworks", "durationMinutes": 26 }
+          {
+            "id": "lesson-writing-prds",
+            "title": "Writing PRDs",
+            "durationMinutes": 24
+          },
+          {
+            "id": "lesson-prioritization",
+            "title": "Prioritization Frameworks",
+            "durationMinutes": 26
+          }
         ]
       }
     ]
@@ -245,17 +413,37 @@
         "id": "mod-devops-basics",
         "title": "Pipeline Foundations",
         "lessons": [
-          { "id": "lesson-ci-cd-overview", "title": "CI/CD Overview", "durationMinutes": 16 },
-          { "id": "lesson-github-actions", "title": "GitHub Actions Basics", "durationMinutes": 28 },
-          { "id": "lesson-environments", "title": "Environment Promotion", "durationMinutes": 24 }
+          {
+            "id": "lesson-ci-cd-overview",
+            "title": "CI/CD Overview",
+            "durationMinutes": 16
+          },
+          {
+            "id": "lesson-github-actions",
+            "title": "GitHub Actions Basics",
+            "durationMinutes": 28
+          },
+          {
+            "id": "lesson-environments",
+            "title": "Environment Promotion",
+            "durationMinutes": 24
+          }
         ]
       },
       {
         "id": "mod-devops-ops",
         "title": "Operations",
         "lessons": [
-          { "id": "lesson-monitoring", "title": "Monitoring and Alerts", "durationMinutes": 26 },
-          { "id": "lesson-rollbacks", "title": "Safe Rollbacks", "durationMinutes": 22 }
+          {
+            "id": "lesson-monitoring",
+            "title": "Monitoring and Alerts",
+            "durationMinutes": 26
+          },
+          {
+            "id": "lesson-rollbacks",
+            "title": "Safe Rollbacks",
+            "durationMinutes": 22
+          }
         ]
       }
     ]
@@ -276,17 +464,37 @@
         "id": "mod-rn-setup",
         "title": "Project Setup",
         "lessons": [
-          { "id": "lesson-expo-vs-bare", "title": "Expo vs Bare Workflow", "durationMinutes": 20 },
-          { "id": "lesson-navigation", "title": "Navigation Patterns", "durationMinutes": 30 },
-          { "id": "lesson-styling", "title": "Styling for Mobile", "durationMinutes": 24 }
+          {
+            "id": "lesson-expo-vs-bare",
+            "title": "Expo vs Bare Workflow",
+            "durationMinutes": 20
+          },
+          {
+            "id": "lesson-navigation",
+            "title": "Navigation Patterns",
+            "durationMinutes": 30
+          },
+          {
+            "id": "lesson-styling",
+            "title": "Styling for Mobile",
+            "durationMinutes": 24
+          }
         ]
       },
       {
         "id": "mod-rn-native",
         "title": "Native Integration",
         "lessons": [
-          { "id": "lesson-device-apis", "title": "Device APIs", "durationMinutes": 28 },
-          { "id": "lesson-performance", "title": "Performance Optimization", "durationMinutes": 32 }
+          {
+            "id": "lesson-device-apis",
+            "title": "Device APIs",
+            "durationMinutes": 28
+          },
+          {
+            "id": "lesson-performance",
+            "title": "Performance Optimization",
+            "durationMinutes": 32
+          }
         ]
       }
     ]
@@ -307,17 +515,37 @@
         "id": "mod-a11y-basics",
         "title": "Accessibility Foundations",
         "lessons": [
-          { "id": "lesson-semantic-html", "title": "Semantic HTML", "durationMinutes": 18 },
-          { "id": "lesson-keyboard", "title": "Keyboard Navigation", "durationMinutes": 22 },
-          { "id": "lesson-color-contrast", "title": "Color and Contrast", "durationMinutes": 16 }
+          {
+            "id": "lesson-semantic-html",
+            "title": "Semantic HTML",
+            "durationMinutes": 18
+          },
+          {
+            "id": "lesson-keyboard",
+            "title": "Keyboard Navigation",
+            "durationMinutes": 22
+          },
+          {
+            "id": "lesson-color-contrast",
+            "title": "Color and Contrast",
+            "durationMinutes": 16
+          }
         ]
       },
       {
         "id": "mod-a11y-patterns",
         "title": "Patterns and Testing",
         "lessons": [
-          { "id": "lesson-aria", "title": "ARIA When You Need It", "durationMinutes": 24 },
-          { "id": "lesson-testing-a11y", "title": "Testing for Accessibility", "durationMinutes": 26 }
+          {
+            "id": "lesson-aria",
+            "title": "ARIA When You Need It",
+            "durationMinutes": 24
+          },
+          {
+            "id": "lesson-testing-a11y",
+            "title": "Testing for Accessibility",
+            "durationMinutes": 26
+          }
         ]
       }
     ]
@@ -338,17 +566,37 @@
         "id": "mod-sql-queries",
         "title": "Query Fundamentals",
         "lessons": [
-          { "id": "lesson-select-where", "title": "SELECT and WHERE", "durationMinutes": 20 },
-          { "id": "lesson-joins", "title": "JOIN Types Explained", "durationMinutes": 28 },
-          { "id": "lesson-aggregations", "title": "Aggregations and GROUP BY", "durationMinutes": 26 }
+          {
+            "id": "lesson-select-where",
+            "title": "SELECT and WHERE",
+            "durationMinutes": 20
+          },
+          {
+            "id": "lesson-joins",
+            "title": "JOIN Types Explained",
+            "durationMinutes": 28
+          },
+          {
+            "id": "lesson-aggregations",
+            "title": "Aggregations and GROUP BY",
+            "durationMinutes": 26
+          }
         ]
       },
       {
         "id": "mod-sql-advanced",
         "title": "Advanced Analytics",
         "lessons": [
-          { "id": "lesson-window-functions", "title": "Window Functions", "durationMinutes": 30 },
-          { "id": "lesson-ctes", "title": "Common Table Expressions", "durationMinutes": 24 }
+          {
+            "id": "lesson-window-functions",
+            "title": "Window Functions",
+            "durationMinutes": 30
+          },
+          {
+            "id": "lesson-ctes",
+            "title": "Common Table Expressions",
+            "durationMinutes": 24
+          }
         ]
       }
     ]
@@ -369,9 +617,21 @@
         "id": "mod-leadership-influence",
         "title": "Influence Without Authority",
         "lessons": [
-          { "id": "lesson-stakeholder-mgmt", "title": "Stakeholder Management", "durationMinutes": 22 },
-          { "id": "lesson-technical-decisions", "title": "Making Technical Decisions", "durationMinutes": 26 },
-          { "id": "lesson-mentorship", "title": "Effective Mentorship", "durationMinutes": 24 }
+          {
+            "id": "lesson-stakeholder-mgmt",
+            "title": "Stakeholder Management",
+            "durationMinutes": 22
+          },
+          {
+            "id": "lesson-technical-decisions",
+            "title": "Making Technical Decisions",
+            "durationMinutes": 26
+          },
+          {
+            "id": "lesson-mentorship",
+            "title": "Effective Mentorship",
+            "durationMinutes": 24
+          }
         ]
       }
     ]

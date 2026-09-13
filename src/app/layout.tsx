@@ -1,4 +1,7 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { clerkThemeVariables } from "@/lib/clerk-appearance";
+import { themeInitScript } from "@/lib/theme";
 import type { Metadata } from "next";
 import { Hanken_Grotesk, Quicksand } from "next/font/google";
 import "./globals.css";
@@ -24,10 +27,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${bodyFont.variable} ${headingFont.variable} h-full font-sans antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <ClerkProvider appearance={{ cssLayerName: "clerk" }}>{children}</ClerkProvider>
+        <ThemeProvider>
+          <ClerkProvider appearance={{ cssLayerName: "clerk", variables: clerkThemeVariables }}>{children}</ClerkProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

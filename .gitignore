@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/.test-build/
 
 # next.js
 /.next/
@@ -46,3 +47,6 @@ next-env.d.ts
 /AGENTS.md
 /CLAUDE.md
 /Take_Home.md
+
+# Working notes for later sessions — not part of the submission
+/docs/

@@ -1,97 +1,93 @@
-import { getAllLessons, type Course } from "@/lib/courses";
+import { getAllLessons, type Course, type Lesson } from "./courses";
 
 export type CourseProgress = {
   completedLessonIds: string[];
+  started?: true;
+  lastVisited?: { lessonId: string; at: number };
 };
 
-const STORAGE_PREFIX = "betteru-progress";
+export const EMPTY_PROGRESS: CourseProgress = { completedLessonIds: [] };
 
-function getStorageKey(userId: string, courseId: string): string {
-  return `${STORAGE_PREFIX}:${userId}:${courseId}`;
+export function getProgressStorageKey(userId: string, courseId: string): string {
+  return `betteru-progress:${userId}:${courseId}`;
 }
 
-function isBrowser(): boolean {
-  return typeof window !== "undefined";
-}
-
-export function getCourseProgress(
-  userId: string,
-  courseId: string,
-): CourseProgress {
-  if (!isBrowser()) {
-    return { completedLessonIds: [] };
-  }
-
-  const raw = window.localStorage.getItem(getStorageKey(userId, courseId));
-  if (!raw) {
-    return { completedLessonIds: [] };
-  }
-
+// localStorage is untrusted: tolerate old, malformed, and manually edited data.
+export function parseCourseProgress(raw: string | null): CourseProgress {
   try {
-    const parsed = JSON.parse(raw) as CourseProgress;
+    const parsed: unknown = JSON.parse(raw ?? "null");
+    if (
+      typeof parsed !== "object" ||
+      parsed === null ||
+      !("completedLessonIds" in parsed) ||
+      !Array.isArray(parsed.completedLessonIds)
+    ) {
+      return EMPTY_PROGRESS;
+    }
+
+    const visit = "lastVisited" in parsed ? parsed.lastVisited : null;
+    const lastVisited = typeof visit === "object" && visit !== null &&
+      "lessonId" in visit && typeof visit.lessonId === "string" &&
+      "at" in visit && typeof visit.at === "number" && Number.isSafeInteger(visit.at) && visit.at >= 0
+      ? { lessonId: visit.lessonId, at: visit.at } : undefined;
+
     return {
-      completedLessonIds: Array.isArray(parsed.completedLessonIds)
-        ? parsed.completedLessonIds
-        : [],
+      ...(lastVisited ? { lastVisited } : {}),
+      ...("started" in parsed && parsed.started === true ? { started: true as const } : {}),
+      completedLessonIds: [...new Set(
+        parsed.completedLessonIds.filter((id): id is string => typeof id === "string"),
+      )],
     };
   } catch {
-    return { completedLessonIds: [] };
+    return EMPTY_PROGRESS;
   }
 }
 
-export function saveCourseProgress(
-  userId: string,
-  courseId: string,
-  progress: CourseProgress,
-): void {
-  if (!isBrowser()) return;
-
-  window.localStorage.setItem(
-    getStorageKey(userId, courseId),
-    JSON.stringify(progress),
-  );
+export function getCourseProgressSummary(course: Course, progress: CourseProgress) {
+  return getLessonProgressSummary(getAllLessons(course), progress);
 }
 
-export function toggleLessonComplete(
-  userId: string,
-  courseId: string,
-  lessonId: string,
-): CourseProgress {
-  const progress = getCourseProgress(userId, courseId);
-  const completed = new Set(progress.completedLessonIds);
-
-  if (completed.has(lessonId)) {
-    completed.delete(lessonId);
-  } else {
-    completed.add(lessonId);
-  }
-
-  const nextProgress = { completedLessonIds: [...completed] };
-  saveCourseProgress(userId, courseId, nextProgress);
-  return nextProgress;
-}
-
-export function getCourseProgressPercent(
-  userId: string,
-  course: Course,
-): number {
-  const lessons = getAllLessons(course);
-  if (lessons.length === 0) return 0;
-
-  const progress = getCourseProgress(userId, course.id);
-  const completedCount = lessons.filter((lesson) =>
+export function getLessonProgressSummary(lessons: Lesson[], progress: CourseProgress) {
+  const completed = lessons.filter((lesson) =>
     progress.completedLessonIds.includes(lesson.id),
   ).length;
+  const total = lessons.length;
+  const isCompleted = total > 0 && completed === total;
+  // Reserve 0% and 100% for genuinely unstarted and completed courses,
+  // including catalogs with enough lessons to round a partial result to either.
+  const percent = completed === 0 ? 0 : isCompleted ? 100 : Math.max(1, Math.min(99, Math.round(completed / total * 100)));
 
-  return Math.round((completedCount / lessons.length) * 100);
+  return { completed, total, percent, isCompleted };
 }
 
-export function isLessonComplete(
-  userId: string,
-  courseId: string,
-  lessonId: string,
-): boolean {
-  return getCourseProgress(userId, courseId).completedLessonIds.includes(
-    lessonId,
-  );
+/** Lesson-outline estimate, not the catalog's advertised total duration. */
+export function getRemainingLessonMinutes(course: Course, progress: CourseProgress): number {
+  return getAllLessons(course).reduce((sum, lesson) =>
+    sum + (progress.completedLessonIds.includes(lesson.id) ? 0 : lesson.durationMinutes), 0);
+}
+
+export function getInProgressCourses(courses: Course[], progressByCourse: Readonly<Record<string, CourseProgress>>) {
+  return courses.flatMap((course) => {
+    const progress = progressByCourse[course.id] ?? EMPTY_PROGRESS;
+    const continuation = getCourseContinuation(course, progress);
+    if (!continuation.isInProgress || !continuation.lesson) return [];
+    const validVisit = getAllLessons(course).some((lesson) => lesson.id === progress.lastVisited?.lessonId);
+    return [{ course, lesson: continuation.lesson, ...getCourseProgressSummary(course, progress),
+      lastVisitedAt: validVisit ? progress.lastVisited?.at ?? 0 : 0 }];
+  }).sort((a, b) => b.lastVisitedAt - a.lastVisitedAt);
+}
+
+export function getCourseContinuation(course: Course, progress: CourseProgress) {
+  const summary = getCourseProgressSummary(course, progress);
+  const lessons = getAllLessons(course);
+  const isStarted = progress.started === true || summary.completed > 0;
+
+  return {
+    isStarted,
+    // The sidebar includes explicitly started 0% courses; the catalog's
+    // assignment-defined In Progress filter still requires a completed lesson.
+    isInProgress: isStarted && summary.total > 0 && !summary.isCompleted,
+    lesson: lessons.find((lesson) => lesson.id === progress.lastVisited?.lessonId && !progress.completedLessonIds.includes(lesson.id))
+      ?? lessons.find((lesson) => !progress.completedLessonIds.includes(lesson.id)) ?? lessons[0],
+  };
 }

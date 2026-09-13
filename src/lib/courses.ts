@@ -28,11 +28,16 @@ export type Course = {
   modules: Module[];
 };
 
+export type CompletionStatus = "all" | "in-progress" | "completed";
+
 export type CourseFilters = {
   search?: string;
   category?: string;
   difficulty?: Difficulty | "";
+  completionStatus?: CompletionStatus;
 };
+
+export const CATEGORY_SEARCH_PARAM = "category";
 
 const courses = coursesData as Course[];
 
@@ -48,14 +53,42 @@ export function getCategories(): string[] {
   return [...new Set(courses.map((course) => course.category))].sort();
 }
 
+export function getCoursesByCategory(
+  catalog: Course[] = courses,
+): Array<{ category: string; courses: Course[] }> {
+  const categories = [...new Set(catalog.map((course) => course.category))].sort();
+  return categories.map((category) => ({
+    category,
+    courses: catalog.filter((course) => course.category === category),
+  }));
+}
+
+export function getCatalogHref(category = ""): string {
+  if (!category) return "/";
+  return `/?${CATEGORY_SEARCH_PARAM}=${encodeURIComponent(category)}`;
+}
+
+export function resolveCategoryParam(
+  value: string | string[] | null | undefined,
+  catalog: Course[] = courses,
+): string {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (!raw) return "";
+  return catalog.some((course) => course.category === raw) ? raw : "";
+}
+
 export function getDifficulties(): Difficulty[] {
   return ["Beginner", "Intermediate", "Advanced"];
 }
 
-export function filterCourses(filters: CourseFilters): Course[] {
+export function filterCourses(
+  filters: CourseFilters,
+  progressByCourseId: Readonly<Record<string, number>> = {},
+  catalog: Course[] = courses,
+): Course[] {
   const search = filters.search?.trim().toLowerCase() ?? "";
 
-  return courses.filter((course) => {
+  return catalog.filter((course) => {
     const matchesSearch =
       !search ||
       course.title.toLowerCase().includes(search) ||
@@ -68,7 +101,13 @@ export function filterCourses(filters: CourseFilters): Course[] {
     const matchesDifficulty =
       !filters.difficulty || course.difficulty === filters.difficulty;
 
-    return matchesSearch && matchesCategory && matchesDifficulty;
+    const percent = progressByCourseId[course.id] ?? 0;
+    const matchesCompletion =
+      !filters.completionStatus || filters.completionStatus === "all" ||
+      (filters.completionStatus === "in-progress" && percent > 0 && percent < 100) ||
+      (filters.completionStatus === "completed" && percent === 100);
+
+    return matchesSearch && matchesCategory && matchesDifficulty && matchesCompletion;
   });
 }
 
@@ -83,10 +122,10 @@ export function getLessonById(
   const course = getCourseById(courseId);
   if (!course) return undefined;
 
-  for (const module of course.modules) {
-    const lesson = module.lessons.find((item) => item.id === lessonId);
+  for (const courseModule of course.modules) {
+    const lesson = courseModule.lessons.find((item) => item.id === lessonId);
     if (lesson) {
-      return { course, module, lesson };
+      return { course, module: courseModule, lesson };
     }
   }
 

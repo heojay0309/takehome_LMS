@@ -1,14 +1,16 @@
-"use client";
+'use client';
 
-import type { Difficulty } from "@/lib/courses";
-
+import type { CompletionStatus, Difficulty } from '@/lib/courses';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 type FiltersProps = {
   categories: string[];
   difficulties: Difficulty[];
   category: string;
-  difficulty: Difficulty | "";
+  difficulty: Difficulty | '';
+  completionStatus: CompletionStatus;
+  onCompletionStatusChange: (value: CompletionStatus) => void;
   onCategoryChange: (value: string) => void;
-  onDifficultyChange: (value: Difficulty | "") => void;
+  onDifficultyChange: (value: Difficulty | '') => void;
 };
 
 function SelectField({
@@ -23,19 +25,30 @@ function SelectField({
   options: Array<{ label: string; value: string }>;
 }) {
   return (
-    <label className="flex flex-col gap-1.5 text-sm">
+    <label className="flex min-w-0 flex-col gap-2 text-sm">
       <span className="font-medium text-foreground">{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="h-11 w-full min-w-0 rounded-md border border-input bg-card px-3 text-base"
-      >
-        {options.map((option) => (
-          <option key={option.value || "all"} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="peer h-12 w-full min-w-0 appearance-none truncate rounded-md border border-input bg-card px-4 pr-12 text-base"
+        >
+          {options.map((option) => (
+            <option key={option.value || 'all'} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+
+        <ChevronDown
+          className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground peer-open:hidden"
+          aria-hidden="true"
+        />
+        <ChevronUp
+          className="pointer-events-none absolute right-4 top-1/2 hidden size-4 -translate-y-1/2 text-muted-foreground peer-open:block"
+          aria-hidden="true"
+        />
+      </div>
     </label>
   );
 }
@@ -45,27 +58,41 @@ export function Filters({
   difficulties,
   category,
   difficulty,
+  completionStatus,
+  onCompletionStatusChange,
   onCategoryChange,
   onDifficultyChange,
 }: FiltersProps) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="catalog-filters">
       <SelectField
         label="Category"
         value={category}
         onChange={onCategoryChange}
         options={[
-          { label: "All categories", value: "" },
+          { label: 'All categories', value: '' },
           ...categories.map((item) => ({ label: item, value: item })),
         ]}
       />
       <SelectField
         label="Difficulty"
         value={difficulty}
-        onChange={(value) => onDifficultyChange(value as Difficulty | "")}
+        onChange={(value) => onDifficultyChange(value as Difficulty | '')}
         options={[
-          { label: "All levels", value: "" },
+          { label: 'All levels', value: '' },
           ...difficulties.map((item) => ({ label: item, value: item })),
+        ]}
+      />
+      <SelectField
+        label="Completion status"
+        value={completionStatus}
+        onChange={(value) =>
+          onCompletionStatusChange(value as CompletionStatus)
+        }
+        options={[
+          { label: 'All', value: 'all' },
+          { label: 'In Progress', value: 'in-progress' },
+          { label: 'Completed', value: 'completed' },
         ]}
       />
     </div>

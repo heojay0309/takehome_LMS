@@ -1,25 +1,32 @@
-import { Sprout } from "lucide-react";
-import { Brand } from "@/components/layout/Brand";
-import { DashboardNav } from "@/components/layout/DashboardNav";
+import { Suspense } from 'react';
+import { Brand } from '@/components/layout/Brand';
+import { ClassroomNav } from '@/components/layout/ClassroomNav';
+import { DashboardNav } from '@/components/layout/DashboardNav';
+import { InProgressCourses } from '@/components/layout/InProgressCourses';
+import { UserNav } from '@/components/layout/UserNav';
+import { ThemeButtons } from '@/components/layout/ThemeButtons';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function Sidebar() {
   return (
-    <aside className="sticky top-0 hidden h-dvh flex-col border-r bg-sidebar px-6 py-8 lg:flex">
-      <Brand />
-      <div className="mt-14">
-        <p className="mb-4 px-5 text-xs font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-          Your classroom
-        </p>
-        <DashboardNav />
+    <aside className="sticky top-0 hidden h-dvh min-h-0 flex-col overflow-y-auto border-r bg-sidebar p-4 lg:flex">
+      <Brand className="shrink-0" />
+      <div className="mt-8 shrink-0">
+        <Suspense fallback={<Skeleton className="h-12 w-full rounded-lg" />}>
+          <DashboardNav />
+        </Suspense>
       </div>
-      <div className="mt-auto rounded-xl bg-muted p-5">
-        <Sprout className="mb-3 size-6 text-progress" strokeWidth={1.75} aria-hidden="true" />
-        <p className="font-heading text-lg font-semibold">A little, every day.</p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Make space to learn something new. Your next step starts here.
-        </p>
+      {/* Split the available middle space 2:1; each section owns its item scroller. */}
+      <div className="mt-8 grid min-h-64 flex-1 grid-rows-[minmax(0,2fr)_minmax(0,1fr)] gap-8">
+        <Suspense fallback={<Skeleton className="h-full min-h-0 w-full rounded-lg" />}>
+          <ClassroomNav />
+        </Suspense>
+        <InProgressCourses />
       </div>
-      <p className="mt-6 px-2 text-xs text-muted-foreground">Your pace. Your possibilities.</p>
+      <div className="mt-8 shrink-0 space-y-4 border-t pt-4">
+        <ThemeButtons />
+        <UserNav />
+      </div>
     </aside>
   );
 }
