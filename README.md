@@ -95,12 +95,14 @@ pnpm build
 
 ## Deployment
 
+**Live demo:** [https://takehome-lms.vercel.app](https://takehome-lms.vercel.app)
+
+Hosted on Vercel from this GitHub repository.
+
 1. Import the repository into Vercel as a Next.js project.
 2. Set the same Clerk variables as local setup. Use production keys for production and keep `CLERK_SECRET_KEY` server-only.
-3. In Clerk Dashboard → **Domains**, add the production URL (for example `https://your-app.vercel.app`). Configure preview origins separately; do not allow arbitrary preview hosts.
-4. Deploy and verify: signed-out users redirect to sign-in, avatar and sign-out work, catalog filters/search work, lesson toggles persist after refresh, and course/lesson URLs load directly.
-
-After the first production deploy, replace this section with the live URL.
+3. In Clerk Dashboard → **Domains**, add `https://takehome-lms.vercel.app`. Configure preview origins separately; do not allow arbitrary preview hosts.
+4. After deploy, verify: signed-out users redirect to sign-in, avatar and sign-out work, catalog filters/search work, lesson toggles persist after refresh, and course/lesson URLs load directly.
 
 ## Trade-offs
 
