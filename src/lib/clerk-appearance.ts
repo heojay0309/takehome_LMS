@@ -30,7 +30,7 @@ export const clerkAppearance = {
     // Only the outer shell owns rounding and elevation. Clerk's form and
     // footer are separate surfaces; rounding both creates a visible seam.
     cardBox: 'w-full max-w-none gap-0 overflow-hidden rounded-xl border border-border bg-card shadow-card',
-    card: 'm-0 w-full min-w-0 gap-8 rounded-none border-0 bg-card p-4 shadow-none sm:p-8',
+    card: 'm-0 w-full min-w-0 gap-4 rounded-none border-0 bg-card p-4 shadow-none sm:gap-6 sm:p-6',
     footer: 'rounded-none border-t border-border bg-muted bg-none p-4 sm:px-8',
     headerTitle:
       'font-heading text-2xl font-semibold tracking-tight text-foreground',

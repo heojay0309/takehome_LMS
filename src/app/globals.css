@@ -221,10 +221,17 @@
   );
 }
 
-/* Portrait layouts prioritize account access, not a stacked marketing hero. */
-.auth-shell,
+/* Lock the auth route to the viewport so the document itself does not scroll.
+   Clerk recovery/verification can still scroll inside .auth-form-area. */
+.auth-shell {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
 .auth-form-area {
-  min-height: 100dvh;
+  min-height: 0;
+  height: 100%;
 }
 
 .auth-story {
@@ -235,10 +242,13 @@
   .auth-shell {
     display: grid;
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-rows: minmax(0, 1fr);
   }
 
   .auth-story {
     display: block;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .auth-mobile-brand {
@@ -252,7 +262,7 @@
 
 @media (min-width: 80rem) and (orientation: landscape) {
   .auth-form-area {
-    padding: 4rem;
+    padding: 3rem;
   }
 }
 
