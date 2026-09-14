@@ -1,5 +1,4 @@
 import { Brand } from '@/components/layout/Brand';
-import { AuthVideo } from '@/components/layout/AuthVideo';
 import { ThemeButtons } from '@/components/layout/ThemeButtons';
 
 export default function AuthLayout({
@@ -19,7 +18,6 @@ export default function AuthLayout({
         aria-labelledby="auth-story-heading"
         className="auth-story violet-veil relative isolate overflow-hidden text-white"
       >
-        <AuthVideo />
         <div className="relative z-10 flex min-h-full flex-col p-8 xl:p-12 ">
           <Brand inverse className="self-start [&_span]:text-white " />
           <div className="my-auto py-8">

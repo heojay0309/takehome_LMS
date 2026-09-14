@@ -21,12 +21,6 @@ const headingFont = Quicksand({
 export const metadata: Metadata = {
   title: "BetterU LMS",
   description: "Browse courses, track progress, and learn at your pace.",
-  icons: {
-    icon: {
-      url: "https://cdn.prod.website-files.com/60bec73c3161d258cff8900b/65f4edf00a019f1d7867c5e8_betterulogo-white%201.png",
-      type: "image/png",
-    },
-  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
