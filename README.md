@@ -107,10 +107,9 @@ Hosted on Vercel from this GitHub repository.
 ## Trade-offs
 
 - Progress is `localStorage` keyed by Clerk `userId`, as specified. If storage is blocked, the UI keeps working in memory and shows a warning; that session cannot survive a refresh.
-- The mock player marks a lesson complete on the video `ended` event. That is a demo affordance, not verified watch time. The checklist can still undo completion.
-- Advertised course duration in the dataset does not equal the sum of lesson durations. Remaining-time copy is labeled as an estimate; `data/courses.json` is not rewritten to make the numbers match.
-- Dark mode and learning tracks are extras built after the required catalog, checklist, and persistence. If they add noise, ignore the classroom quiz and judge the catalog.
-- No Playwright/Cypress. Unit tests cover progress, filters, and stores; sign-in and layout still need a real browser pass.
+- The mock player marks a lesson complete when the sample video ends. That is a demo affordance, not watch-time tracking. The checklist can still undo completion.
+- Dark mode and learning tracks are extras. The required catalog, filters, checklist, and persistence work without them.
+- No Playwright/Cypress. Unit tests cover progress, filters, and stores.
 
 ## AI Usage
 
@@ -127,9 +126,7 @@ I treated the models as drafters. I kept the assignment open while reviewing dif
 ### Workflows that helped most
 
 1. **Audit the brief against the repo before adding features.** I asked the agent to map the current tree to the Definition of Done (auth, catalog filters, debounce, progress, skeletons, empty states) and list only what was still missing. That stopped me from building extras first.
-
 2. **Research, then write a spec, then implement.** I used LMS reference material (including Blackboard’s strengths around paths and assessment) to decide whether a light onboarding track was worth it. The useful prompt was not “build onboarding.” It was: _propose a goal-based track that stays inside the provided 12-course catalog, with an experience gate, and do not invent new courses._ I wrote that as a short brief in a separate Claude chat, then implemented against the brief.
-
 3. **Name the actual component, don’t say “think harder.”** When hover styling failed on the account control, retrying the same prompt wasted time. Opening `UserNav` showed the UI was Clerk’s `UserButton`, not a local profile card. The next prompt targeted `appearance.elements` (`userButtonTrigger`, `avatarBox`, `userButtonOuterIdentifier`) so the hit area and hover state covered avatar + name together.
 
 ### What the AI got wrong
@@ -140,6 +137,6 @@ A second miss: onboarding. Asked for suggested courses, the model built a surfac
 
 ## If I had more time
 
-1. Sign into the real Better U product with a test account and see how learners actually move through it. I would rather steal one or two patterns that already work than keep guessing from the marketing site.
+1. Sign into the real Better U product with a test account and study how that app’s workflow is structured, then bring over anything that would help this dashboard.
 2. I already added goal-based tracks after looking at how other LMS platforms handle personalization. Next I would show people where they stand against that goal — not just per-course checkboxes — and call out a few achievements when they hit milestones.
 3. Add a short Playwright run that signs in, searches and filters the catalog, toggles a lesson, refreshes, and checks that the progress is still there.
